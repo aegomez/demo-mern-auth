@@ -9,6 +9,10 @@
     "start": "node dist/server.js",
     "server": "node-dev dist/server.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aegomez/demo-mern-auth.git"
+  },
   "keywords": [
     "auth",
     "login",
