@@ -28,7 +28,7 @@
 
 // export default model<IUserSchema>('users', UserSchema);
 
-import { createSchema, Type, typedModel } from 'ts-mongoose';
+import { createSchema, Type, typedModel, ExtractProps } from 'ts-mongoose';
 
 const UserSchema = createSchema({
   name: Type.string(),
@@ -37,6 +37,5 @@ const UserSchema = createSchema({
   date: Type.optionalDate({ default: Date.now as any })
 });
 
-const UserModel = typedModel('users', UserSchema);
-
-export default UserModel;
+export const UserModel = typedModel('users', UserSchema);
+export type TUserProps = ExtractProps<typeof UserSchema>;
