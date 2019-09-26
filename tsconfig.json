@@ -1,16 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "target": "es2017",
     "module": "commonjs",
     "jsx": "react",
-    "outDir": "dist",
+    "outDir": "build",
     "rootDir": "src",
     "removeComments": true,
     "importHelpers": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true

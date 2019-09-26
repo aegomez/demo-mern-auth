@@ -37,5 +37,5 @@ const UserSchema = createSchema({
   date: Type.optionalDate({ default: Date.now as any })
 });
 
-export const UserModel = typedModel('users', UserSchema);
+export const User = typedModel('users', UserSchema);
 export type TUserProps = ExtractProps<typeof UserSchema>;
