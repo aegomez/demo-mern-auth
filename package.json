@@ -36,8 +36,12 @@
     "validator": "^11.1.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/express": "^4.17.1",
+    "@types/jsonwebtoken": "^8.3.4",
     "@types/mongoose": "^5.5.17",
+    "@types/passport": "^1.0.1",
+    "@types/passport-jwt": "^3.0.2",
     "@types/validator": "^10.11.3",
     "node-dev": "^4.0.0",
     "prettier": "^1.18.2"

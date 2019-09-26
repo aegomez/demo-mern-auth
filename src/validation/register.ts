@@ -32,7 +32,7 @@ const validateRegisterInput = (data: RegisterInputData) => {
     errors.password = 'Password field is required';
   }
 
-  if (Validator.isLength(password, { min: 6, max: 30 })) {
+  if (!Validator.isLength(password, { min: 6, max: 30 })) {
     errors.password = 'Password must be 6 to 30 characters long';
   }
 
@@ -40,7 +40,7 @@ const validateRegisterInput = (data: RegisterInputData) => {
     errors.password2 = 'Confirm password field is required';
   }
 
-  if (Validator.equals(password, password2)) {
+  if (!Validator.equals(password, password2)) {
     errors.password2 = 'Passwords must match';
   }
 
