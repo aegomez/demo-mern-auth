@@ -6,6 +6,26 @@ Inspired from [this series of articles](https://blog.bitsrc.io/build-a-login-aut
 
 WIP.
 
+## Build JS files
+
+```
+npm run build-server
+
+npm run build-client
+```
+
+## Run the server
+
+```
+npm start
+```
+
+## Run the server (watch)
+
+```
+npm run server
+```
+
 ## License
 
 [MIT](LICENSE)

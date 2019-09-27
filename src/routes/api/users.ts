@@ -45,7 +45,7 @@ router.post('/register', async (req, res) => {
 
     return res.json(result);
   } catch (e) {
-    console.error('Error on register 2', e);
+    console.error('Error on /register', e);
   }
 });
 
@@ -54,54 +54,59 @@ router.post('/register', async (req, res) => {
  * @description Login user and return JWT
  * @access Public
  */
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   // Form validation
-  const { errors, isValid } = validateLoginInput(req.body);
+  const { errors, isEmail, isValid } = validateLoginInput(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
-  const { name, password } = req.body;
+  const { nameOrEmail, password } = req.body;
+  const key = isEmail ? 'email' : 'name';
 
-  // Find user by email
-  User.findOne({ email: name }).then(user => {
+  try {
+    // Find user by email or name
+    const user = await User.findOne({ [key]: nameOrEmail });
+
     if (!user) {
       return res.status(404).json({
-        emailnotfound: 'Email not found'
+        usernotfound: 'User not found'
       });
     }
 
     // If user exists, check password
-    bcrypt.compare(password, user.password).then(isMatch => {
-      if (isMatch) {
-        // Create JWT Payload
-        const payload = {
-          id: user.id,
-          name: user.name
-        };
+    const isMatch = await bcrypt.compare(password, user.password);
 
-        // Sign token
-        jwt.sign(
-          payload,
-          secretOrKey,
-          {
-            expiresIn: '7d'
-          },
-          (_, token) => {
-            res.json({
-              success: true,
-              token: 'Bearer ' + token
-            });
-          }
-        );
-      } else {
-        return res.status(400).json({
-          passwordincorrect: 'Password incorrect'
+    // Return if password doesn't match
+    if (!isMatch) {
+      return res.status(400).json({
+        passwordincorrect: 'Password incorrect'
+      });
+    }
+    // Create JWT Payload
+    const payload = {
+      id: user.id,
+      name: user.name
+    };
+
+    // Sign token
+    jwt.sign(
+      payload,
+      secretOrKey,
+      {
+        expiresIn: '7d'
+      },
+      (_, token) => {
+        res.json({
+          success: true,
+          token: 'Bearer ' + token
         });
       }
-    });
-  });
+    );
+  } catch (e) {
+    console.error('Error on /login', e);
+  }
 });
 
 export default router;
