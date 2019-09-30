@@ -6,24 +6,42 @@ Inspired from [this series of articles](https://blog.bitsrc.io/build-a-login-aut
 
 WIP.
 
-## Build JS files
+## Available scripts
 
-```
+### Build JS files
+
+```sh
 npm run build-server
 
+# at project root
 npm run build-client
+
+npm run build-all
 ```
 
-## Run the server
+### Run the server
 
 ```
 npm start
 ```
 
-## Run the server (watch)
+### Run the server (watch mode)
 
 ```
 npm run server
+```
+
+### Run the client
+
+```sh
+# at project root
+npm run client
+```
+
+### Run all
+
+```
+npm run dev
 ```
 
 ## License

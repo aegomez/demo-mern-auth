@@ -7,7 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-server": "tsc",
     "start": "node build/server.js",
-    "server": "node-dev build/server.js"
+    "server": "node-dev build/server.js",
+    "build-client": "npm run build --prefix client",
+    "client": "npm start --prefix client",
+    "build-all": "npm run build-server && npm run build-client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
