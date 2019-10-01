@@ -1,7 +1,30 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { connect } from 'react-redux';
+import classnames from 'classnames';
+import { Dispatch, bindActionCreators } from 'redux';
+import { RootAction, RootState } from 'typesafe-actions';
 
-type Props = {};
+import { loginUser } from '../../actions/authActions';
+
+const mapStateToProps = (state: RootState) => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
+  bindActionCreators(
+    {
+      loginUser
+    },
+    dispatch
+  );
+
+type OwnProps = RouteComponentProps;
+
+type Props = ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps> &
+  OwnProps;
 
 type State = {
   nameOrEmail: string;
@@ -17,6 +40,18 @@ class Login extends React.Component<Props, State> {
     password: '',
     errors: {}
   };
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.auth.isAuthenticated) {
+      // push user to dashboard when they login
+      this.props.history.push('/dashboard');
+    }
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
+  }
 
   handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
@@ -35,10 +70,12 @@ class Login extends React.Component<Props, State> {
       password: this.state.password
     };
     console.log(userData);
+
+    this.props.loginUser(userData);
   };
 
   render() {
-    // const { errors } = this.state;
+    const { errors } = this.state;
     return (
       <div className='container'>
         <div className='row' style={{ marginTop: '4rem' }}>
@@ -63,8 +100,15 @@ class Login extends React.Component<Props, State> {
                   onChange={this.handleChange}
                   value={this.state.nameOrEmail}
                   // error='errors.nameOrEmail'
+                  className={classnames('', {
+                    invalid: errors.nameOrEmail || errors.usernotfound
+                  })}
                 />
                 <label htmlFor='nameOrEmail'>Username or Email</label>
+                <span className='red-text'>
+                  {errors.email}
+                  {errors.usernotfound}
+                </span>
               </div>
               <div className='input-field col s12'>
                 <input
@@ -73,8 +117,15 @@ class Login extends React.Component<Props, State> {
                   onChange={this.handleChange}
                   value={this.state.password}
                   // error='errors.password'
+                  className={classnames('', {
+                    invalid: errors.password || errors.passwordincorrect
+                  })}
                 />
                 <label htmlFor='password'>Password</label>
+                <span className='red-text'>
+                  {errors.password}
+                  {errors.passwordincorrect}
+                </span>
               </div>
               <div className='col s12' style={{ paddingLeft: '11.25px' }}>
                 <button
@@ -97,4 +148,7 @@ class Login extends React.Component<Props, State> {
   }
 }
 
-export default Login;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login);

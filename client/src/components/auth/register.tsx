@@ -1,7 +1,30 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
+import { Dispatch, bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import classnames from 'classnames';
+import { RootAction, RootState } from 'typesafe-actions';
 
-type Props = {};
+import { registerUser } from '../../actions/authActions';
+
+const mapStateToProps = (state: RootState) => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
+  bindActionCreators(
+    {
+      registerUser: registerUser
+    },
+    dispatch
+  );
+
+type OwnProps = RouteComponentProps;
+
+type Props = ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps> &
+  OwnProps;
 
 type State = {
   name: string;
@@ -22,6 +45,14 @@ class Register extends React.Component<Props, State> {
     errors: {}
   };
 
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
+  }
+
   handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       [event.target.id]: event.target.value
@@ -41,10 +72,11 @@ class Register extends React.Component<Props, State> {
       password2: this.state.password2
     };
     console.log(newUser);
+    this.props.registerUser(newUser, this.props.history);
   };
 
   render() {
-    // const { errors } = this.state;
+    const { errors } = this.state;
     return (
       <div className='container'>
         <div className='row'>
@@ -69,8 +101,10 @@ class Register extends React.Component<Props, State> {
                   onChange={this.handleChange}
                   value={this.state.name}
                   // error='errors.name'
+                  className={classnames('', { invalid: errors.name })}
                 />
                 <label htmlFor='name'>Name</label>
+                <span className='red-text'>{errors.name}</span>
               </div>
               <div className='input-field col s12'>
                 <input
@@ -79,8 +113,10 @@ class Register extends React.Component<Props, State> {
                   onChange={this.handleChange}
                   value={this.state.email}
                   // error='errors.email'
+                  className={classnames('', { invalid: errors.email })}
                 />
                 <label htmlFor='email'>Email</label>
+                <span className='red-text'>{errors.email}</span>
               </div>
               <div className='input-field col s12'>
                 <input
@@ -89,8 +125,10 @@ class Register extends React.Component<Props, State> {
                   onChange={this.handleChange}
                   value={this.state.password}
                   // error='errors.password'
+                  className={classnames('', { invalid: errors.password })}
                 />
                 <label htmlFor='password'>Password</label>
+                <span className='red-text'>{errors.password}</span>
               </div>
               <div className='input-field col s12'>
                 <input
@@ -99,8 +137,10 @@ class Register extends React.Component<Props, State> {
                   onChange={this.handleChange}
                   value={this.state.password2}
                   // error='errors.password2'
+                  className={classnames('', { invalid: errors.password })}
                 />
                 <label htmlFor='password2'>Confirm Password</label>
+                <span className='red-text'>{errors.password2}</span>
               </div>
               <div className='col s12' style={{ paddingLeft: '11.25px' }}>
                 <button
@@ -123,4 +163,7 @@ class Register extends React.Component<Props, State> {
   }
 }
 
-export default Register;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Register));

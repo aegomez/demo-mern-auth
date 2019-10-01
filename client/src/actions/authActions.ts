@@ -1,13 +1,30 @@
 import ky from 'ky';
 import jwtDecode from 'jwt-decode';
 import { Dispatch } from 'redux';
+import { History } from 'history';
 
 import setAuthToken from '../utils/setAuthToken';
 import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING } from './types';
 
+type RegisterData = {
+  name: string;
+  email: string;
+  password: string;
+  password2: string;
+};
+
+type LoginData = {
+  nameOrEmail: string;
+  password: string;
+};
+
 // Register User
-export const registerUser = (userData, history) => (dispatch: Dispatch) => {
-  ky.post('/api/users/register', userData)
+export const registerUser = (userData: RegisterData, history: History) => (
+  dispatch: Dispatch
+) => {
+  ky.post('/api/users/register', {
+    body: JSON.stringify(userData)
+  })
     .then(_ => history.push('/login'))
     .catch(err =>
       dispatch({
@@ -18,8 +35,10 @@ export const registerUser = (userData, history) => (dispatch: Dispatch) => {
 };
 
 // Login - get user token
-export const loginUser = userData => (dispatch: Dispatch) => {
-  ky.post('/api/users/login', userData)
+export const loginUser = (userData: LoginData) => (dispatch: Dispatch) => {
+  ky.post('/api/users/login', {
+    body: JSON.stringify(userData)
+  })
     .then(res => res.json())
     .then(data => {
       // Save token to localStorage
@@ -64,4 +83,8 @@ export const logoutUser = () => (dispatch: Dispatch) => {
   // Set current user to empty object {} which
   // will set isAuthenticated to false
   dispatch(setCurrentUser({}));
+};
+
+export const RootActions = {
+  auth: { registerUser, loginUser, setCurrentUser, setUserLoading, logoutUser }
 };
