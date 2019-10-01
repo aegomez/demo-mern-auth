@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Redirect, RouteComponentProps } from 'react-router';
+import { Route, Redirect, RouteProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { RootState } from 'typesafe-actions';
 
@@ -7,8 +7,8 @@ const mapStateToProps = (state: RootState) => ({
   auth: state.auth
 });
 
-type OwnProps = {
-  component: React.ComponentType<RouteComponentProps>;
+type OwnProps = RouteProps & {
+  component: React.ComponentType;
   auth: {
     isAuthenticated: boolean;
     user: {};

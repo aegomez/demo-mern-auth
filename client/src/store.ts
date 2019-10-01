@@ -2,12 +2,13 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 
 import rootReducer from './reducers';
+import { RootState, RootAction } from 'typesafe-actions';
 
 const initialState = {};
 
 const middleware = [thunk];
 
-const store = createStore(
+const store = createStore<RootState, RootAction, any, any>(
   rootReducer,
   initialState,
   compose(applyMiddleware(...middleware))

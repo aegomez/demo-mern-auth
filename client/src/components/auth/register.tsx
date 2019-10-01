@@ -53,6 +53,14 @@ class Register extends React.Component<Props, State> {
     }
   }
 
+  componentDidMount() {
+    // If a logged in user navigates to Register page,
+    // should redirect them to dashboard
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push('/dashboard');
+    }
+  }
+
   handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       [event.target.id]: event.target.value
