@@ -23,7 +23,7 @@ export const registerUser = (userData: RegisterData, history: History) => (
   dispatch: Dispatch
 ) => {
   ky.post('/api/users/register', {
-    body: JSON.stringify(userData)
+    json: userData
   })
     .then(_ => history.push('/login'))
     .catch(err =>
@@ -37,7 +37,8 @@ export const registerUser = (userData: RegisterData, history: History) => (
 // Login - get user token
 export const loginUser = (userData: LoginData) => (dispatch: Dispatch) => {
   ky.post('/api/users/login', {
-    body: JSON.stringify(userData)
+    json: userData,
+    throwHttpErrors: false
   })
     .then(res => res.json())
     .then(data => {
@@ -82,7 +83,7 @@ export const logoutUser = () => (dispatch: Dispatch) => {
   setAuthToken(false);
   // Set current user to empty object {} which
   // will set isAuthenticated to false
-  dispatch(setCurrentUser({}));
+  dispatch(setCurrentUser(''));
 };
 
 export const RootActions = {

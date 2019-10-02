@@ -45,7 +45,7 @@ class Register extends React.Component<Props, State> {
     errors: {}
   };
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (nextProps.errors) {
       this.setState({
         errors: nextProps.errors

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 import { RootAction, RootState } from 'typesafe-actions';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 import { logoutUser } from '../../actions/authActions';
 
@@ -18,12 +19,14 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
   );
 
 type Props = ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>;
+  ReturnType<typeof mapDispatchToProps> &
+  RouteComponentProps;
 
 class Dashboard extends React.Component<Props> {
   handleLogoutClick = (event: React.MouseEvent) => {
     event.preventDefault();
     this.props.logoutUser();
+    this.props.history.replace('/');
   };
 
   render() {
@@ -60,4 +63,4 @@ class Dashboard extends React.Component<Props> {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Dashboard);
+)(withRouter(Dashboard));

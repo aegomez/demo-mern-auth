@@ -7,7 +7,10 @@ const initialState = {};
 const errorReducers = (state = initialState, action: AnyAction) => {
   switch (action.type) {
     case GET_ERRORS:
-      return action.payload;
+      return {
+        ...state,
+        errors: action.payload
+      };
     default:
       return state;
   }
