@@ -26,24 +26,34 @@ export const registerUser = (userData: RegisterData, history: History) => (
     json: userData
   })
     .then(_ => history.push('/login'))
-    .catch(err =>
+    .catch(err => {
+      const { response } = err;
+      // check if error comes from API
+      if (response.status === 400) {
+        return response.json();
+      } else {
+        // external error
+        throw err;
+      }
+    })
+    .then(errorData =>
       dispatch({
         type: GET_ERRORS,
-        payload: err.response.data
+        payload: errorData
       })
-    );
+    )
+    .catch(console.error);
 };
 
 // Login - get user token
 export const loginUser = (userData: LoginData) => (dispatch: Dispatch) => {
   ky.post('/api/users/login', {
-    json: userData,
-    throwHttpErrors: false
+    json: userData
   })
-    .then(res => res.json())
-    .then(data => {
+    .json<any>()
+    .then(response => {
       // Save token to localStorage
-      const { token } = data;
+      const { token } = response;
       localStorage.setItem('jwtToken', token);
       // Set token to Auth header
       setAuthToken(token);
@@ -53,11 +63,22 @@ export const loginUser = (userData: LoginData) => (dispatch: Dispatch) => {
       dispatch(setCurrentUser(decoded));
     })
     .catch(err => {
+      const { response } = err;
+      // check if error is from API
+      if (response.status === 400 || response.status === 404) {
+        return response.json();
+      } else {
+        // external error
+        throw err;
+      }
+    })
+    .then(errorData =>
       dispatch({
         type: GET_ERRORS,
-        payload: err.response.data
-      });
-    });
+        payload: errorData
+      })
+    )
+    .catch(console.error);
 };
 
 // Set logged in user

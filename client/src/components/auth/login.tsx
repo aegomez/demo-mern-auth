@@ -77,7 +77,6 @@ class Login extends React.Component<Props, State> {
       nameOrEmail: this.state.nameOrEmail,
       password: this.state.password
     };
-    console.log(userData);
 
     this.props.loginUser(userData);
   };
@@ -114,7 +113,7 @@ class Login extends React.Component<Props, State> {
                 />
                 <label htmlFor='nameOrEmail'>Username or Email</label>
                 <span className='red-text'>
-                  {errors.email}
+                  {errors.nameOrEmail}
                   {errors.usernotfound}
                 </span>
               </div>
